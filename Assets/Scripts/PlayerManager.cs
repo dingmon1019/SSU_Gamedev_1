@@ -1,45 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class PlayerManager : MonoBehaviour
 {
-    public float speed = 10.0f; // 이동 속도
-    public float jumpHeight = 2.0f; // 점프 최대치
-
-    private bool isGrounded = true; // 땅에 붙어 있는지 여부를 저장할 변수
-
-    private Tilemap tilemap;
-
-    void Start()
+    public float maxSpeed;
+    public float jumpPower;
+    Rigidbody2D rigid;
+    void Awake()
     {
-        // Tilemap 객체를 가져옴
-        tilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
+        rigid = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        float horizontalInput = Input.GetAxis("Horizontal"); 
-
-        Vector2 movement = new Vector2(horizontalInput * speed, GetComponent<Rigidbody2D>().velocity.y); 
-        GetComponent<Rigidbody2D>().velocity = movement;
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded) // 스페이스바 입력을 받고 땅에 붙어 있는 경우에만 점프 가능
+        float h = Input.GetAxisRaw("Horizontal");
+        rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse);
+        if (rigid.velocity.x > maxSpeed) //���� �̵�
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, Mathf.Sqrt(jumpHeight * -2f * Physics2D.gravity.y)); // 점프 처리
-            isGrounded = false; // 점프 후 땅에서 벗어남
+            rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Tilemap 객체와 충돌한 경우
-        if (collision.gameObject.GetComponent<TilemapCollider2D>() == tilemap.GetComponent<TilemapCollider2D>())
+        else if (rigid.velocity.x < maxSpeed * (-1)) // ���� �̵�
         {
-            isGrounded = true; // 땅에 붙어 있음
+            rigid.velocity = new Vector2(maxSpeed * (-1), rigid.velocity.y);
         }
-    }
 
-    
+        if (Input.GetKeyDown(KeyCode.Space)) // ����
+        {
+            rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        }
+
+    }
 }
