@@ -7,6 +7,9 @@ public class PlayerManager : MonoBehaviour
     public float maxSpeed;
     public float jumpPower;
     Rigidbody2D rigid;
+
+    [SerializeField] private AudioSource jumpSoundEffect;
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -28,6 +31,7 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space)) // มกวม
         {
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            jumpSoundEffect.Play();
         }
 
     }
