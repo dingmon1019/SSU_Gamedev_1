@@ -8,7 +8,11 @@ public class PlayerManager : MonoBehaviour
     public float jumpPower;
     Rigidbody2D rigid;
 
+    public Transform respawnPoint;
+
     [SerializeField] private AudioSource jumpSoundEffect;
+
+    public GameManager manager;
 
     void Awake()
     {
@@ -36,4 +40,34 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
+
+
+    private void OnTriggerEnter2D(Collider2D other) 
+    {
+     if(other.CompareTag("Trap"))
+     {
+        Die();
+     }   
+     else if(other.CompareTag("Flag"))
+     {
+      respawnPoint=  other.gameObject.transform;
+      Destroy(other);
+     }
+    }
+   
+
+
+    void Die()
+    {
+        Invoke("RespawnPlayer",2f);
+        gameObject.SetActive(false);
+        
+
+    }
+
+
+
+
+
+
 }
