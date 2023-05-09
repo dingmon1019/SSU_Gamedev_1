@@ -15,17 +15,18 @@ public class PlayerManager : MonoBehaviour
     void FixedUpdate()
     {
         float h = Input.GetAxisRaw("Horizontal");
+        
         rigid.AddForce(Vector2.right * h, ForceMode2D.Impulse);
-        if (rigid.velocity.x > maxSpeed) //¿ìÃø ÀÌµ¿
+        if (rigid.velocity.x > maxSpeed) //ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         {
             rigid.velocity = new Vector2(maxSpeed, rigid.velocity.y);
         }
-        else if (rigid.velocity.x < maxSpeed * (-1)) // ÁÂÃø ÀÌµ¿
+        else if (rigid.velocity.x < maxSpeed * (-1)) // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         {
             rigid.velocity = new Vector2(maxSpeed * (-1), rigid.velocity.y);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space)) // Á¡ÇÁ
+        if (Input.GetKeyDown(KeyCode.Space)) // ï¿½ï¿½ï¿½ï¿½
         {
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         }
